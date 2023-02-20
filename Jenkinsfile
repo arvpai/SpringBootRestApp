@@ -4,20 +4,27 @@ pipeline {
         gradle 'gradle_1'
     }
     stages {
+        stage('Build') {
+            steps {
+              script {
+                    try {
+                        sh './gradlew clean build --no-daemon' //run a gradle build task
+                    } finally {
+                        echo "Build fails"
+                    }
+                }
+            }
+        }
         stage('Compile') {
             steps {
-                gradlew('clean', 'classes')
+                script {
+                  try {
+                        sh './gradlew clean test --no-daemon' //run a gradle task
+                    } finally {
+                        junit '**/build/test-results/test/*.xml' //make the junit test results available in any case (success & failure)
+                    }
+                }
             }
         }
-        // stage('Long-running Verification') {
-        //     environment {
-        //         SONAR_LOGIN = credentials('jenkins-maven-poc')
-        //     }
-        // }
-        // stage('Code Analysis') {
-        //             steps {
-        //                 gradlew('sonarqube')
-        //             }
-        //         }
-            }
-        }
+     }
+}
