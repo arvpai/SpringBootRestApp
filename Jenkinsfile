@@ -15,6 +15,20 @@ pipeline {
                 }
             }
         }
+        stage('Sonarqube code quality check') {
+             steps {
+                    withSonarQubeEnv(installationName :'sonar-9', credentialsId : 'jenkins-maven-poc') {
+                    sh 'gradle sonarqube'
+                         }
+                       }
+    }
+        stage("Quality Gate") {
+            steps {
+              timeout(time: 1, unit: 'HOURS') {
+                waitForQualityGate abortPipeline: true
+                       }
+                  }
+             }
         stage('Compile') {
             steps {
                 script {
