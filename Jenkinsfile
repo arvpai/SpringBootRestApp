@@ -17,8 +17,8 @@ pipeline {
         }
         stage('Sonarqube code quality check') {
              steps {
-                    withSonarQubeEnv(installationName :'sonar-9', credentialsId : 'jenkins-maven-poc') {
-                    sh 'gradle sonarqube'
+                    withSonarQubeEnv(installationName :'sonar-9') {
+                    sh './gradlew sonarqube'
                          }
                        }
     }
